@@ -402,32 +402,37 @@
             }
         }
     </script>
-    <!-- Подключение Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  
+  <script>
+    // Конфигурация Firebase (ваши данные)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
+      authDomain: "days-bef8b.firebaseapp.com",
+      projectId: "days-bef8b",
+      storageBucket: "days-bef8b.appspot.com",
+      messagingSenderId: "69033447865",
+      appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
+    };
 
-<script type="module">
-        // Импортируем необходимые функции из Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        // Импортируем дополнительные модули Firebase по необходимости
-        // import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        
-        // Конфигурация Firebase
-        const firebaseConfig = {
-              apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
-              authDomain: "days-bef8b.firebaseapp.com",
-              projectId: "days-bef8b",
-              storageBucket: "days-bef8b.firebasestorage.app",
-              messagingSenderId: "69033447865",
-              appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
-        };
+    // Инициализация Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();  // ← Подключаем Firestore
 
-        // Инициализируем Firebase
-        const app = initializeApp(firebaseConfig);
-        
-        console.log("Firebase инициализирован!", app);
-    
-</script>
+    // Функция для сохранения данных
+    function saveData() {
+      db.collection("test").add({
+        message: "Hello Firebase!",
+        timestamp: new Date()
+      })
+      .then(() => alert("Данные сохранены!"))
+      .catch(error => alert("Ошибка: " + error));
+    }
+  </script>
+</head>
+<body>
+  <button onclick="saveData()">Сохранить в Firebase</button>
 </body>
 </html>
