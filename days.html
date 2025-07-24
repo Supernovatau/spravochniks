@@ -407,67 +407,106 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   
   <script>
-    // Конфигурация Firebase (ваши данные)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
-      authDomain: "days-bef8b.firebaseapp.com",
-      projectId: "days-bef8b",
-      storageBucket: "days-bef8b.appspot.com",
-      messagingSenderId: "69033447865",
-      appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
-    };
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Real-Time Test</title>
+    
+    <!-- Подключаем Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
+            authDomain: "days-bef8b.firebaseapp.com",
+            projectId: "days-bef8b",
+            storageBucket: "days-bef8b.appspot.com",
+            messagingSenderId: "69033447865",
+            appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
+        };
 
-    // Инициализация Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();  // ← Подключаем Firestore
+        // Инициализация Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-    // Функция для сохранения данных
-    function saveData() {
-      db.collection("test").add({
-        message: "Hello Firebase!",
-        timestamp: new Date()
-      })
-      .then(() => alert("Данные сохранены!"))
-      .catch(error => alert("Ошибка: " + error));
-    }
-  </script>
-<script>
-  const db = firebase.firestore();
+        // Функция для сохранения данных
+        function saveData() {
+            db.collection("messages").add({
+                text: "Новое сообщение",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => console.log("Данные сохранены!"))
+            .catch(error => {
+                console.error("Ошибка сохранения:", error);
+                alert("Ошибка сохранения: " + error.message);
+            });
+        }
 
-  // Функция для сохранения данных
-  function saveData() {
-    db.collection("messages").add({
-      text: "Новое сообщение",
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    })
-    .then(() => console.log("Данные сохранены!"))
-    .catch(error => console.error("Ошибка сохранения:", error));
-  }
+        // Функция для загрузки данных
+        function loadData() {
+            const messagesList = document.getElementById("messages");
+            
+            db.collection("messages")
+                .orderBy("timestamp", "desc")
+                .onSnapshot({
+                    next: (snapshot) => {
+                        messagesList.innerHTML = "";
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            const date = data.timestamp?.toDate();
+                            messagesList.innerHTML += `
+                                <div class="message">
+                                    ${data.text} 
+                                    <small>(${date ? date.toLocaleString() : 'нет даты'})</small>
+                                </div>
+                            `;
+                        });
+                    },
+                    error: (err) => {
+                        console.error("Ошибка загрузки:", err);
+                        messagesList.innerHTML = `<div class="error">Ошибка загрузки данных</div>`;
+                    }
+                });
+        }
 
-  // Функция для ЗАГРУЗКИ данных (добавьте это!)
-  function loadData() {
-    db.collection("messages")
-      .orderBy("timestamp", "desc") // Сортировка по дате
-      .onSnapshot(snapshot => {  // Слушатель изменений в реальном времени
-        const messagesList = document.getElementById("messages");
-        messagesList.innerHTML = "";
-        
-        snapshot.forEach(doc => {
-          const message = doc.data();
-          messagesList.innerHTML += `
-            <div>${message.text} (${new Date(message.timestamp?.toDate()).toLocaleString()})</div>
-          `;
-        });
-      });
-  }
-
-  // Вызываем при загрузке страницы
-  window.addEventListener("load", loadData);
-</script>
-
+        // Загружаем данные при старте
+        document.addEventListener("DOMContentLoaded", loadData);
+    </script>
+    
+    <style>
+        .message {
+            padding: 10px;
+            margin: 5px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+        }
+        button {
+            padding: 10px 15px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #3367d6;
+        }
+    </style>
+</head>
 <body>
-  <div id="messages"></div>
-  <button onclick="saveData()">Отправить сообщение</button>
-  <button onclick="saveData()">Сохранить в Firebase</button>
+    <h1>Чат Firebase</h1>
+    <div id="messages"></div>
+    <button onclick="saveData()">Отправить сообщение</button>
+    
+    <script>
+        // Для отладки
+        console.log("Firebase инициализирован:", app);
+        console.log("Firestore instance:", db);
+    </script>
 </body>
 </html>
