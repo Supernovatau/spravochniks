@@ -431,8 +431,43 @@
       .catch(error => alert("Ошибка: " + error));
     }
   </script>
-</head>
+<script>
+  const db = firebase.firestore();
+
+  // Функция для сохранения данных
+  function saveData() {
+    db.collection("messages").add({
+      text: "Новое сообщение",
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => console.log("Данные сохранены!"))
+    .catch(error => console.error("Ошибка сохранения:", error));
+  }
+
+  // Функция для ЗАГРУЗКИ данных (добавьте это!)
+  function loadData() {
+    db.collection("messages")
+      .orderBy("timestamp", "desc") // Сортировка по дате
+      .onSnapshot(snapshot => {  // Слушатель изменений в реальном времени
+        const messagesList = document.getElementById("messages");
+        messagesList.innerHTML = "";
+        
+        snapshot.forEach(doc => {
+          const message = doc.data();
+          messagesList.innerHTML += `
+            <div>${message.text} (${new Date(message.timestamp?.toDate()).toLocaleString()})</div>
+          `;
+        });
+      });
+  }
+
+  // Вызываем при загрузке страницы
+  window.addEventListener("load", loadData);
+</script>
+
 <body>
+  <div id="messages"></div>
+  <button onclick="saveData()">Отправить сообщение</button>
   <button onclick="saveData()">Сохранить в Firebase</button>
 </body>
 </html>
