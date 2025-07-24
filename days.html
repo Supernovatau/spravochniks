@@ -407,33 +407,26 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 
-<script>
+<script type="module">
+        // Импортируем необходимые функции из Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // Импортируем дополнительные модули Firebase по необходимости
+        // import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        // Конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
+            authDomain: "days-bef8b.firebaseapp.com",
+            projectId: "days-bef8b",
+            storageBucket: "days-bef8b.appspot.com",
+            messagingSenderId: "69033447865",
+            appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
+        };
 
-   <!-- Подключение Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBjiai3bP5pOMYkj0y2RTJ0qBtJvdPwlB4",
-  authDomain: "days-bef8b.firebaseapp.com",
-  projectId: "days-bef8b",
-  storageBucket: "days-bef8b.firebasestorage.app",
-  messagingSenderId: "69033447865",
-  appId: "1:69033447865:web:2b72ac7bceb4952bb72668"
-};
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-  // Инициализация Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore(); // Для работы с базой данных
+        // Инициализируем Firebase
+        const app = initializeApp(firebaseConfig);
+        
+        console.log("Firebase инициализирован!", app);
     
 </script>
 </body>
